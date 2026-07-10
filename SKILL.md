@@ -9,8 +9,8 @@ description: |
 
 ## 执行前必读检查清单
 
-- [ ] **Chrome 路径**：从 `user_software_location.md` 读取 Chrome 路径（默认 `<LOCAL_PATH>
-- [ ] **Playwright 已安装**：`<LOCAL_PATH> 环境中已有 playwright
+- [ ] **Chrome 路径**：从 `user_software_location.md` 读取 Chrome 路径，设置 `$env:CHROME_PATH`
+- [ ] **Playwright 已安装**：Python 环境中已有 playwright（`pip install playwright && playwright install chromium`）
 - [ ] **提取 paper_slug**：从小报童 URL 中提取（`/p/{slug}` 中的 `{slug}`）
 - [ ] **运行 login.py**：headed 浏览器打开 → 用户扫码 → 保存 state JSON
 - [ ] **运行 extract.py**：headless → API 拦截获取全部文章 → HTML→MD
@@ -20,22 +20,22 @@ description: |
 ## Before You Start
 
 **必需输入**：小报童专栏 URL（格式 `https://xiaobot.net/p/{slug}`）
-**可选输入**：Obsidian Vault 目标路径（默认 `3. AI系统/{专栏名}/`）
+**可选输入**：Obsidian Vault 目标路径
 **前置条件**：用户已订阅该专栏（付费内容需订阅才能导出）
 
 提取 paper_slug：URL 中 `/p/` 后面、`?` 之前的部分。
 
 **依赖安装**：
 
-| 工具 | 安装 | 说明 |
-|------|------|------|
-| [Python](https://www.python.org/) | 官网下载 ≥ 3.10 | 运行提取脚本 |
-| [Playwright](https://github.com/microsoft/playwright) | `pip install playwright && playwright install chromium` | 浏览器自动化，拦截 API |
-| [Chrome](https://www.google.com/chrome/) | 官网下载 | 登录用浏览器（headed 模式） |
+| 工具 | 安装 | GitHub |
+|------|------|--------|
+| [Python](https://www.python.org/) ≥ 3.10 | 官网下载 | — |
+| [Playwright](https://github.com/microsoft/playwright) | `pip install playwright && playwright install chromium` | [microsoft/playwright](https://github.com/microsoft/playwright) |
+| [Chrome](https://www.google.com/chrome/) | 官网下载 | — |
 
 环境变量设置：
 ```powershell
-$env:CHROME_PATH = "你的 Chrome 可执行文件路径"  # 如 <LOCAL_PATH> Files\Google\Chrome\Application\chrome.exe
+$env:CHROME_PATH = "你的 Chrome 可执行文件路径"
 ```
 
 ## Workflow
@@ -43,17 +43,17 @@ $env:CHROME_PATH = "你的 Chrome 可执行文件路径"  # 如 <LOCAL_PATH> Fil
 ### 1. 登录（headed 浏览器，用户扫码）
 
 ```powershell
-$env:PYTHONUTF8=1; & "<LOCAL_PATH>" "SKILL_DIR/scripts/login.py" "<state_path>"
+$env:PYTHONUTF8=1; & python "SKILL_DIR/scripts/login.py" "<state_path>"
 ```
 
-- `<state_path>`: state JSON 保存路径（如 `<CLAUDE_PATH>
+- `<state_path>`: state JSON 保存路径
 - 脚本打开 Chrome → 自动点击登录 → 用户微信扫码 → 保存 localStorage
 - 输出 `LOGIN_OK|<path>` 表示成功；`LOGIN_TIMEOUT` 表示超时需重试
 
 ### 2. 批量提取（headless，API 拦截）
 
 ```powershell
-$env:PYTHONUTF8=1; & "<LOCAL_PATH>" "SKILL_DIR/scripts/extract.py" "<state_path>" "<paper_slug>" "<output_dir>"
+$env:PYTHONUTF8=1; & python "SKILL_DIR/scripts/extract.py" "<state_path>" "<paper_slug>" "<output_dir>"
 ```
 
 - 自动拦截 API 响应获取文章列表（含 HTML 全文），无需逆向签名
@@ -63,7 +63,7 @@ $env:PYTHONUTF8=1; & "<LOCAL_PATH>" "SKILL_DIR/scripts/extract.py" "<state_path>
 ### 3. 移动到 Obsidian Vault
 
 ```powershell
-$dest = "<LOCAL_PATH> Vault\3. AI系统\<专栏名>"
+$dest = "你的 Obsidian Vault 路径\专栏名"
 New-Item -ItemType Directory -Path $dest -Force
 Copy-Item "<output_dir>\*.md" -Destination $dest -Force
 ```
