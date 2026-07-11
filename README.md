@@ -6,7 +6,7 @@
 
 | Skill | 说明 | 依赖 |
 |-------|------|------|
-| [SPA课程提取-spa-course-extractor](SPA课程提取-spa-course-extractor/) | 从 SPA 课程平台提取文档+图片到本地 Markdown | [OpenCLI](https://github.com/jackwener/OpenCLI)、[Tabbit Browser](https://www.tabbit.com/)、Node.js |
+| [SPA课程提取-spa-course-extractor](SPA课程提取-spa-course-extractor/) | 从 SPA 课程平台提取文档+图片到本地 Markdown（支持单课/批量提取） | [OpenCLI](https://github.com/jackwener/OpenCLI)、[Tabbit Browser](https://www.tabbit.com/)、Node.js |
 | [小报童归档-xiaobot-archive](小报童归档-xiaobot-archive/) | 批量导出小报童付费专栏文章为 Markdown | [Playwright](https://github.com/microsoft/playwright)、Python、Chrome |
 
 ## 安装
